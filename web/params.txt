@@ -1,0 +1,4 @@
+cropH=125x42+245+167
+cropV=118x39+579+262
+threshold=94
+shear=-9,0

@@ -1,0 +1,8 @@
+[Service]
+ExecStart=/bin/bash /usr/share/nginx/html/ocr.sh
+WorkingDirectory=/usr/share/nginx/html
+User=sacha
+After=cam0.service cam1.service ws.service
+
+[Install]
+WantedBy=multi-user.target

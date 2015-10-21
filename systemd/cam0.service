@@ -1,0 +1,7 @@
+[Service]
+ExecStart=/usr/bin/ffmpeg -r 5 -s 1024x576 -y -f v4l2 -i /dev/video0 -q:v 2 -r 0.2 -vf "vflip" -update 1 /usr/share/nginx/html/output0.jpg
+User=sacha
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+[Service]
+ExecStart=/usr/bin/node server.js
+WorkingDirectory=/usr/share/nginx/html/
+User=sacha
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

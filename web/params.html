@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8 />
+    <title></title>
+    <link  href="cropperjs/dist/cropper.css" rel="stylesheet">
+    <script src="cropperjs/dist/cropper.js"></script>
+    <style type="text/css">
+      input[type="range"] {
+      position: relative;
+      margin-left: 1em;
+      }
+      input[type="range"]:after,
+      input[type="range"]:before {
+      position: absolute;
+      top: 1em;
+      color: #aaa;
+      }
+      input[type="range"]:before {
+      left:0em;
+      content: attr(min);
+      }
+      input[type="range"]:after {
+      right: 0em;
+      content: attr(max);
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      <button class="submit" type="button">Valider</button>
+      <button class="reset" type="button">Réinitialiser le graphique</button>      
+    </p>
+    <h1>Sonde du haut</h1>
+    <div class="haut">
+      <img src="output1.jpg" />
+      <img src="data1.jpg" />            
+    </div>
+    <h1>Sonde du bas</h1>
+    <div class="bas">
+      <img src="output1.jpg" />
+      <img src="data2.jpg" />                  
+    </div>
+    <h1>Threshold</h1>
+    <div>
+      <input id="t" type="range" min="0" max="100" />
+      <div id="to"/></div>      
+    </div>
+    
+    <h1>Shear</h1>
+    <h2>Horizontal</h2>
+    <div>
+      <input id="hs" type="range" min="-20" max="20" />
+      <div id="hso"/></div>
+    </div>
+
+    <h2>Vertical</h2>
+    <div>
+      <input id="vs" type="range" min="-20" max="20" />
+      <div id="vso"></div>
+    </div>
+    
+    <script type="text/javascript">
+
+      function $(id) { return document.getElementById(id); }
+      onload = function() {
+        $('t').oninput = function() { $('to').innerHTML = this.value; };      
+        $('hs').oninput = function() { $('hso').innerHTML = this.value; };      
+        $('vs').oninput = function() { $('vso').innerHTML = this.value; };
+      }
+      var http = new XMLHttpRequest();
+      var params;
+      http.open("GET", "/params.json", true);
+      http.onreadystatechange = function() {
+        if (http.readyState == 4) {
+          params = JSON.parse(http.responseText);
+
+          for(var sonde in params) {
+            for(var key in params[sonde]) {
+              params[sonde][key] = parseInt(params[sonde][key]);
+            }
+          }
+          var haut;
+          var image = document.querySelector(".haut > img");
+          var cropper = new Cropper(image, {
+          data: params["haut"],
+          zoomable: false,
+          crop: function(data) {
+            haut = data;
+          }
+          });
+          var bas;
+          var image = document.querySelector(".bas > img");
+          var cropper = new Cropper(image, {
+          data: params["bas"],
+          zoomable: false,
+          crop: function(data) {
+            bas = data;
+          }
+          });
+
+          $('to').innerHTML = params["global"]["threshold"];
+          $('t').value = params["global"]["threshold"];      
+          $('hso').innerHTML = params["global"]["shear_h"];
+          $('hs').value = params["global"]["shear_h"]; 
+          $('vso').innerHTML = params["global"]["shear_v"];
+          $('vs').value = params["global"]["shear_v"];            
+          var button = document.querySelector(".submit");
+          button.onclick=function(){
+            var http = new XMLHttpRequest();
+            http.open("POST", "/send_params", true);
+            http.send(JSON.stringify({"global":{"threshold":$('t').value,"shear_h":$('hs').value,"shear_v":$('vs').value},haut,bas}));
+          };
+          var button = document.querySelector(".reset");
+          button.onclick=function(){
+            var http = new XMLHttpRequest();
+            http.open("POST", "/reset", true);
+            http.send("reset:true");
+          };            
+        }
+      }
+      console.log(params);
+      http.send(null);
+    </script>
+    <script type="text/javascript">
+    </script> 
+  </body>
+</html>
