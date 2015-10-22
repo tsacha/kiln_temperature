@@ -1,3 +1,4 @@
+cd /usr/share/nginx/html
 # Force la régénération des graphiques de data/.
 # Évite de se retrouver avec un graphique vide à cause d'une coupure brutale.
 shopt -s nullglob

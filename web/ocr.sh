@@ -36,8 +36,8 @@ while inotifywait -e close_write output1.jpg; do
     # si la différence entre les deux sondes est trop grande, on drop l'input
     diff1=$(echo "$prev1 - $data1" | bc -l | sed 's/-//')
     diff2=$(echo "$prev2 - $data2" | bc -l | sed 's/-//')
-    diffTS=$(echo "$(date +%s) - $last_date" | bc -l | sed 's/-//') 
-    if [ $prevTS -eq -1 ] || [ $(($prev1+$prev2)) -eq -2 ] || [ $diffTS -gt 60 ] || ([ $diff1 -le 3 ] && [ $diff2 -le 3 ]); then
+    diffTS=$(echo "$(date +%s) - $last_date" | bc -l | sed 's/-//')
+    if [ $last_date -eq -1 ] || [ $(($prev1+$prev2)) -eq -2 ] || [ $diffTS -gt 60 ] || ([ $diff1 -le 3 ] && [ $diff2 -le 3 ]); then
       line=$(date "+%d/%m/%Y %H:%M:%S")";$data1;$data2"
       last_date=$(date +%s)
       # enregistrement csv

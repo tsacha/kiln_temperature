@@ -1,7 +1,7 @@
 [Service]
 ExecStart=/usr/bin/node server.js
 WorkingDirectory=/usr/share/nginx/html/
-User=sacha
+User=http
 Restart=always
 
 [Install]

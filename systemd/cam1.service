@@ -1,6 +1,6 @@
 [Service]
 ExecStart=/usr/bin/ffmpeg -r 5 -s 1024x576 -y -f v4l2 -i /dev/video1 -q:v 2 -r 0.2 -update 1 /usr/share/nginx/html/output1.jpg
-User=sacha
+User=http
 Restart=always
 
 [Install]
